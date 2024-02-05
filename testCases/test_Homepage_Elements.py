@@ -2,7 +2,7 @@ import pytest
 from selenium.webdriver.common.by import By
 from pageObjects.homepage import Homepage
 from testCases.conftest import *
-from utilities.utils_functions import GenerateLog, take_screenshot
+from utilities.utils_functions import GenerateLog
 
 
 class Test_WebElement:
