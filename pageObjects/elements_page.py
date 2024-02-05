@@ -65,7 +65,6 @@ class Element_Page:
     upload_id = "uploadFile"
     upload_file_path_id = "uploadedFilePath"
 
-
     def __init__(self, driver):
         self.driver = driver
         self.act = ActionChains(self.driver)
@@ -114,6 +113,10 @@ class Element_Page:
 
     def click_dynamic_properties_sub_menu(self):
         self.click_sub_menu_element(0, 8)
+
+    # For Forms page
+    def forms_page_open(self):
+        self.click_sub_menu_element(1, 0)
 
     # Text Boxes methods
     def set_full_name_input(self, full_name):
