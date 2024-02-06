@@ -140,18 +140,238 @@ This command will run all the test suites defined in the project.
 ### 1. Home Page Automation
 
 This test suite covers automation of the home page of the DemoQA website. It includes tests for verifying page title, presence of elements, and basic functionality.
+#### Web ELements on this page:
+1. Header
+2. Footer
+3. Cards
+4. Images
+5. Links
+
+**Click using JavaScript**
+```python
+div = divs[index].find_elements(By.TAG_NAME, 'div')[0]
+self.driver.execute_script("arguments[0].click()", div)
+```
+```python
+
+```
 
 ### 2. Elements Page
 
 This test suite focuses on automating tests related to the "Elements" section of the DemoQA website. It includes tests for various elements such as text boxes, check boxes, radio buttons, buttons, web tables, links, upload and download functionality, and dynamic properties.
+#### Elements on this Page:
+1. **Text Box**
+    - using **send_keys()** method
+   ```python
+    self.driver.find_element(By.CSS_SELECTOR, self.username_input_css).send_keys(full_name)
+    ```
+   - using **execute_script()** method
+   ```python
+    email_element = self.driver.find_element(By.CSS_SELECTOR, self.email_input_css)
+    self.driver.execute_script("arguments[0].value = arguments[1];", email_element, "abc@gmail.com")
+    ```
+2. **Check Box**
+    ```python
+    self.driver.find_element(By.CLASS_NAME, self.expand_all_checkboxes_button_class).click()
+    ```
+3. **Radio Button**
+    ```python
+    if value.lower() == "yes":
+        yes_radio = self.driver.find_element(By.CSS_SELECTOR, self.yes_radio_btn_css)
+        self.driver.execute_script("arguments[0].click()", yes_radio)
+    elif value.lower() == "impressive":
+        impressive_radio = self.driver.find_element(By.CSS_SELECTOR, self.impressive_radio_btn_css)
+        self.driver.execute_script("arguments[0].click()", impressive_radio)
+    elif value.lower() == 'no':
+        return self.driver.find_element(By.CSS_SELECTOR, self.no_radio_btn_css).is_enabled()
+    ```
+4. **Web Tables**
+- Get tables header/columns name
+   ```python
+   def get_table_columns_name(self):
+       columns = self.driver.find_elements(By.XPATH, self.table_columns_xpath)
+       return [column.text for column in columns]
+   ```
+  - Get Table rows records as dict
+   ```python
+   def get_table_rows_data(self):
+       data = {}
+       rows = self.driver.find_elements(By.CLASS_NAME, self.table_rows_data_class)
+       for index, row in enumerate(rows):
+           data[index] = row.text.split("\n")
+       return data
+   ```
+5. **Buttons**
+- Double Click
+    ```python
+    def double_click(self):
+        double_btn = self.driver.find_element(By.ID, self.double_click_btn_id)
+        self.act.double_click(double_btn).perform()
+    ```
+- Right Click also known as context click
+  ```python
+  def right_click(self):
+      right_btn = self.driver.find_element(By.ID, self.right_click_btn_id)
+      self.act.context_click(right_btn).perform()
+  ```
+6. **Links**
+     ```python
+        self.driver.find_element(By.LINK_TEXT, link_text).click()
+        or 
+        click_link = self.driver.find_element(By.LINK_TEXT, link_text)
+        self.driver.execute_script("arguments[0].click()", click_link)
+    ```
+7. **Broken Images - Links**: similar as links
+8. **Upload and Download**
+```python
+    def upload_download(self, n, file):
+        if n == 'upload':
+            self.driver.find_element(By.ID, self.upload_id).send_keys(file)
+            return self.driver.find_element(By.ID, self.upload_file_path_id).text
+        elif n == 'download':
+            self.driver.find_element(By.ID, self.download_btn_id).click()
+        else:
+            pass
+```
+9. **Dynamic Properties**: like elements will appear after 5 seconds, text color change, visible for 5 seconds
+    ```python
+    time.sleep(5)
+    self.driver.find_element(By.LINK_TEXT, "Login").click()
+    ```
 
 ### 3. Forms Page
 
 This test suite covers automation of tests related to the "Forms" section of the DemoQA website. It includes tests for interacting with the simple student registration form.
+#### Elements on this page:
+- Text box, check box, radio button, textarea, upload, dropdown
+- **Check Boxe**:
+  - Method to work with 3 check boxes, first uncheck all checked boxes ,then check as per required
+    ```python
+        def set_hobbies(self, s=False, m=False, r=False):
+            checkboxes = {
+                'sports': (self.sports_hobbies_checkbox_id, s),
+                'music': (self.music_hobbies_checkbox_id, m),
+                'reading': (self.reading_hobbies_checkbox_id, r)
+            }
+    
+            for hobby, (checkbox_id, flag) in checkboxes.items():
+                checkbox = self.driver.find_element(By.ID, checkbox_id)
+                if flag != checkbox.is_selected():
+                    self.driver.execute_script("arguments[0].click()", checkbox)
+    ```
+- **Dropdown**:
+  - Method for dropdown select
+      ```python
+          def set_state_city(self, state_index, city_index):
+              state_dropdown = self.driver.find_element(By.XPATH, self.state_dropdown_id).click()
+              state_dropdown.click()
+              option_div = self.driver.find_element(By.XPATH, self.dropdown_options_xpath)
+              options = option_div.find_elements(By.TAG_NAME, 'div')
+              options[state_index].click()
+    
+              state_dropdown = self.driver.find_element(By.XPATH, self.city_dropdown_id).click()
+              state_dropdown.click()
+              option_div = self.driver.find_element(By.XPATH, self.dropdown_options_xpath)
+              options = option_div.find_elements(By.TAG_NAME, 'div')
+              options[city_index].click()
+      ```
 
 ### 4. Alerts, Frame & Windows Page
 
 This test suite focuses on automating tests related to the "Alerts, Frame & Windows" section of the DemoQA website. It includes tests for handling browser windows, alerts, frames, nested frames, and model dialogs.
+#### Elements on this page:
+1. New Tabs and windows
+   - Open new tab 
+    ```python
+        # Switch to the new tab
+        driver.switch_to.window("new_tab")
+   
+        # Open another tab in the new window
+        driver.execute_script("window.open('https://www.example.com/page4', 'another_tab')")
+    ``` 
+    - Open new window
+    ```python
+        # Switch to the new blank window
+        driver.switch_to.window("new_window")
+       
+        # Open a new window with url
+        driver.execute_script("window.open('https://www.example.com/page3', 'new_window')")
+    ```
+   - Switch between windows
+   ```python
+   win_handles = self.driver.window_handles
+   self.driver.switch_to.window(win_handles[1])
+   ```
+   
+2. Alerts, Confirm and Prompt
+   1. Alerts
+      ```python    
+      def test_alert(self):
+        self.alertpage.click_alert_button()
+        alert = self.driver.switch_to.alert
+        alert.accept()
+        assert "You clicked a button" == alert.text```
+   2. Confirm
+   ```python
+    @pytest.mark.parametrize('act', [('accept'), ('dismiss')])
+    def test_confirm_alert(self, act):
+        self.alertpage.click_confirm_button()
+        confirm = self.driver.switch_to.alert
+        assert "Do you confirm action?" == confirm.text
+        if act == "accept":
+            confirm.accept()
+            msg = self.alertpage.get_confirm_result()
+            assert "You selected Ok" == msg
+        elif act == "dismiss":
+            confirm.dismiss()
+            msg = self.alertpage.get_confirm_result()
+            assert "You selected Cancel" == msg
+   ```
+   3. Prompt
+   ```python
+    @pytest.mark.parametrize('act', [('accept'), ('dismiss')])
+    def test_prompt(self, act):
+        self.alertpage.click_prompt()
+        prompt = self.driver.switch_to.alert
+        msg = prompt.text
+        assert "Please enter your name" == msg
+        if act == 'accept':
+            prompt.send_keys("Hello Peter")
+            prompt.accept()
+            msg = self.alertpage.get_prompt_result()
+            assert msg == "You entered Hello Peter"
+        elif act == 'dismiss':
+            prompt.dismiss()
+            assert True
+   ```
+3. Frames
+    ```python
+        def test_large_frame(self):
+            self.driver.switch_to.frame(self.alertpage.large_frame_id)
+            text = self.alertpage.get_large_frame_content()
+            assert text == "This is a sample page"
+    ```
+4. Nested Frames
+    ```python
+        def test_parent_frame(self):
+            self.driver.switch_to.frame(self.alertpage.parent_frame_id)
+            content = self.alertpage.get_parent_frame_content()
+            assert "Parent frame" == content
+    
+            self.driver.switch_to.frame(0)
+            content = self.alertpage.get_parent_frame_content()
+            assert "Child Iframe" == content
+    ```
+5. Modal Dialogs
+```python
+    def test_small_model(self):
+        self.alertpage.get_small_model()
+        title = self.alertpage.get_model_title()
+        body = self.alertpage.get_model_body_text()
+        assert "Small Modal" in title
+        assert "small modal" in body
+        self.alertpage.close_model_by_btn('s')
+```
 
 ### 5. Widgets Page
 

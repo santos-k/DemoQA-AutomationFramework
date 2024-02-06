@@ -11,5 +11,5 @@ def setup():
     driver.implicitly_wait(10)
     driver.get(base_url)
     yield driver
-    # driver.quit()
+    driver.quit()
 

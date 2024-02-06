@@ -5,6 +5,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+
 class Element_Page:
     main_header_text_class = "main-header"  # Main element category heading
     text_id = "Ad.Plus-728x90"  # text to start
@@ -117,6 +118,15 @@ class Element_Page:
     # For Forms page
     def forms_page_open(self):
         self.click_sub_menu_element(1, 0)
+
+    def open_sub_menus(self, menu_index, submenu_index):
+        """
+        Use this function to navigate to different pages like, element, forms, etc....
+        :param menu_index: int -> Index of menu available on home page
+        :param submenu_index: int -> index of submenu wrt to menu
+        :return: open that page
+        """
+        self.click_sub_menu_element(menu_index,submenu_index)
 
     # Text Boxes methods
     def set_full_name_input(self, full_name):
