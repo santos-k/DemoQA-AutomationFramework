@@ -26,9 +26,10 @@ class Test_Form_Page:
         self.formpage.set_first_last_name("Santosh", "Kumar")
         self.formpage.set_gender('m')
         self.formpage.set_email_mobile('santosh@abc.com', 9999988888)
+        self.formpage.set_dob_subject("20 Feb 2024", "This is subject")
         self.formpage.set_hobbies(True,True,True)
         self.formpage.set_picture_address("C:\\Users\\withu\\Downloads\\python.png", "Rajiv Chowk, CP")
         # self.formpage.set_state_city(0,1)
         self.formpage.submit_form()
-        time.sleep(20)
+        assert True
 

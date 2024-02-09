@@ -107,7 +107,6 @@ def setup():
     driver.get(base_url)
     yield driver
     driver.quit()
-
 ```
 
 ```python
@@ -151,9 +150,6 @@ This test suite covers automation of the home page of the DemoQA website. It inc
 ```python
 div = divs[index].find_elements(By.TAG_NAME, 'div')[0]
 self.driver.execute_script("arguments[0].click()", div)
-```
-```python
-
 ```
 
 ### 2. Elements Page
@@ -376,6 +372,119 @@ This test suite focuses on automating tests related to the "Alerts, Frame & Wind
 ### 5. Widgets Page
 
 This test suite covers automation of tests related to the "Widgets" section of the DemoQA website. It includes tests for various widgets such as accordion, auto complete, date picker, slider, progress bar, tabs, tool tips, menu, and select menu.
+Elements on this page:
+1. **Accordian**
+```python
+    def get_accordian(self, index):
+        card_body = None
+        accordian = self.driver.find_element(By.ID, self.accordian_div_id)
+        cards = accordian.find_elements(By.CLASS_NAME, self.accordian_card_class)
+        card = cards[index]
+        card_heading = card.find_element(By.CLASS_NAME, self.accordian_card_heading_class)
+        collapse_class_value = card.find_element(By.CLASS_NAME, 'collapse').get_attribute('class')
+        if collapse_class_value == 'collapse show':
+            card_body = card.find_element(By.CLASS_NAME, self.accordian_card_body_class).text
+        elif collapse_class_value == 'collapse':
+            self.driver.execute_script("arguments[0].click()", card_heading)
+            card_body = card.find_element(By.CLASS_NAME, self.accordian_card_body_class).text
+        return card_heading.text, card_body
+```
+1. **Auto Complete**
+1. **Date Picker**
+```python
+    def set_date(self, date):
+        date_element = self.driver.find_element(By.ID, self.date_picker_id)
+        date_element.clear()
+        self.driver.execute_script("arguments[0].value = arguments[1];", date_element, date)
+
+    def set_datetime(self, datetime):
+        date_element = self.driver.find_element(By.ID, self.date_n_time_picker_id)
+        date_element.clear()
+        self.driver.execute_script("arguments[0].value = arguments[1];", date_element, datetime)
+```
+1. **Slider**
+```python
+    def set_range_slider_value(self, desired_value):
+        slider = self.driver.find_element(By.XPATH, self.range_slider_input_xpath)
+        display_value = self.driver.find_element(By.ID, self.range_value_display_id)
+        min_value = 0
+        max_value = 100
+
+        # Set the desired values using JavaScript
+        self.driver.execute_script("arguments[0].setAttribute('min', arguments[1]);", slider, min_value)
+        self.driver.execute_script("arguments[0].setAttribute('max', arguments[1]);", slider, max_value)
+
+        # Set the slider to a specific value
+        self.driver.execute_script("arguments[0].value = arguments[1];", slider, desired_value)
+        self.driver.execute_script("arguments[0].value = arguments[1];", display_value, desired_value)
+
+```
+1. **Progress Bar**
+```python
+    def set_progress_bar(self, sec):
+        btn = self.driver.find_element(By.ID, self.start_stop_btn_id)
+        btn.click()
+        time.sleep(sec)
+        btn.click()
+
+    def get_progress_bar_value(self):
+        return self.driver.find_element(By.XPATH, self.progress_bar_div).text
+
+```
+1. **Tabs**
+```python
+    def click_tabs(self, tab_name):
+        if tab_name == 'what':
+            what_tab = self.driver.find_element(By.ID, self.what_tab_id)
+            self.driver.execute_script("arguments[0].click()", what_tab)
+        elif tab_name == 'origin':
+            origin_tab = self.driver.find_element(By.ID, self.origin_tab_id)
+            self.driver.execute_script("arguments[0].click()", origin_tab)
+        elif tab_name == 'use':
+            use_tab = self.driver.find_element(By.ID, self.use_tab_id)
+            self.driver.execute_script("arguments[0].click()", use_tab)
+```
+1. **Tool Tips**
+```python
+    def get_tool_tip_on_btn_msg(self):
+        self.driver.find_element(By.ID, self.tool_tip_btn_id).click()
+        tool_tip = self.driver.find_element(By.CLASS_NAME, self.btn_tool_tip_msg_div_class)
+        return tool_tip.text
+
+    def get_tool_tip_on_input_field_msg(self):
+        self.driver.find_element(By.ID, self.text_field_id).click()
+        tool_tip = self.driver.find_element(By.CLASS_NAME, self.btn_tool_tip_msg_div_class)
+        return tool_tip.text
+```
+1. **Menu**
+```python
+    def click_menu_item1(self):
+        menu1 = self.driver.find_element(By.LINK_TEXT, self.menu_item1_link_text)
+        href_text = menu1.get_attribute("href")
+        menu1.click()
+        return href_text
+```
+1. **Select Menu**
+```python
+    def multiselect_dropdown(self):
+        multiselect = self.driver.find_elements(By.XPATH, "//*[@class=' css-tlfecz-indicatorContainer']")
+        self.driver.execute_script("arguments[0].scrollIntoView();", multiselect[-1])
+        multiselect[-1].click()
+        self.driver.find_element(By.ID, self.red_color_multi_select_id).click()
+        self.driver.find_element(By.ID, self.black_color_multi_select_id).click()
+        self.driver.find_element(By.ID, self.blue_color_multi_select_id).click()
+        self.driver.find_element(By.ID, self.green_color_multi_select_id).click()
+        
+  def standard_multiselect(self):
+        std_multi = self.driver.find_element(By.ID, "cars")
+        select = Select(std_multi)
+        select.select_by_visible_text("Volvo")
+        select.select_by_value("saab")
+        select.select_by_index(2)
+        selected_list = select.all_selected_options
+        return [x.text for x in selected_list]
+```
+
 
 ### 6. Interactions Page
 

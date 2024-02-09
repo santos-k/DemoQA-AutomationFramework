@@ -52,7 +52,8 @@ class Forms_Page:
         self.driver.find_element(By.ID, self.mobile_number_input_id).send_keys(mobile)
 
     def set_dob_subject(self, dob, sub):
-        self.driver.find_element(By.ID, self.dob_input_id).send_keys(dob)
+        date = (self.driver.find_element(By.ID, self.dob_input_id).clear())
+        date.send_keys(dob)
         self.driver.find_element(By.ID, self.subject_input_id).send_keys(sub)
 
     def set_hobbies(self, s=False, m=False, r=False):
