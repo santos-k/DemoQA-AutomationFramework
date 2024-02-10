@@ -489,6 +489,64 @@ Elements on this page:
 ### 6. Interactions Page
 
 This test suite focuses on automating tests related to the "Interactions" section of the DemoQA website. It includes tests for sortable, selectable, resizable, droppable, and draggable interactions.
+#### Elements on this Page:
+ 1. **Sortable**
+```python
+# List Shortable
+list_items_container = self.driver.find_element(By.CSS_SELECTOR, self.div_of_lists_css)
+list_items = list_items_container.find_elements(By.CSS_SELECTOR, self.list_divs_css)
+for i in range(3):
+    self.act.drag_and_drop(list_items[i], list_items[-1]).perform()
+
+# Grid Shortable
+grid_items_container = self.driver.find_element(By.CLASS_NAME, self.grid_class)
+grid_items = grid_items_container.find_elements(By.TAG_NAME, 'div')
+
+self.act.drag_and_drop(grid_items[-1], grid_items[0]).perform()
+self.act.drag_and_drop(grid_items[-2], grid_items[1]).perform()
+self.act.drag_and_drop(grid_items[-3], grid_items[2]).perform()
+
+```
+2. **Selectable**
+```python
+# List items selectable
+list_items_container = self.driver.find_element(By.ID, self.selectable_lists_ul_id)
+list_items = list_items_container.find_elements(By.TAG_NAME, 'li')
+for i in list_items:
+    i.click()
+
+# Grid items selectable
+grid_items = self.driver.find_elements(By.XPATH, self.selectable_grid_items_xpath)
+for i in range(0, 9, 2):
+    grid_items[i].click()
+```
+3. **Resizable**
+```python
+    def resize_small_div(self, width, height):
+        small_div_element = self.driver.find_element(By.ID, self.small_div_inside_large_div_id)
+        self.driver.execute_script("arguments[0].scrollIntoView();", small_div_element)
+        self.driver.execute_script(f"arguments[0].style.width = '{width}px';", small_div_element)
+        self.driver.execute_script(f"arguments[0].style.height = '{height}px';", small_div_element)
+        return small_div_element.size['width'], small_div_element.size['height']
+
+    def resizable_div(self, width, height):
+        resizeable_div_element = self.driver.find_element(By.ID, self.resizable_large_div_id)
+        self.driver.execute_script("arguments[0].scrollIntoView();", resizeable_div_element)
+        self.driver.execute_script(f"arguments[0].style.width = '{width}px';", resizeable_div_element)
+        self.driver.execute_script(f"arguments[0].style.height = '{height}px';", resizeable_div_element)
+        return resizeable_div_element.size['width'], resizeable_div_element.size['height']
+```
+4. **Droppable**
+```python
+# simple drop
+self.act.drag_and_drop(source_element, target_element).perform()
+```
+5. **Draggable**
+```python
+# drag with position
+self.act.drag_and_drop_by_offset(child, 20, 20)
+```
+
 
 ### 7. Book Store Application
 
