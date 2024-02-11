@@ -32,13 +32,14 @@ class Element_Page:
     # Elements on Radio Button page
     yes_radio_btn_css = "#yesRadio"
     impressive_radio_btn_css = "#impressiveRadio"
-    no_radio_btn_css = "#noRadio"   # disabled
+    no_radio_btn_css = "#noRadio"  # disabled
     msg_on_radio_select_class = "text-success"
 
     # Elements on Web Tables page
     add_new_record_button_id = "addNewRecordButton"
     search_box_input_id = "searchBox"
     table_rows_data_class = "rt-tr-group"
+    table_columns_xpath = "//*[@class='rt-tr']"
     form_id = "userForm"
     first_name_id = "firstName"
     last_name_id = "lastName"
@@ -115,23 +116,10 @@ class Element_Page:
     def click_dynamic_properties_sub_menu(self):
         self.click_sub_menu_element(0, 8)
 
-    # For Forms page
-    def forms_page_open(self):
-        self.click_sub_menu_element(1, 0)
-
-    def open_sub_menus(self, menu_index, submenu_index):
-        """
-        Use this function to navigate to different pages like, element, forms, etc....
-        :param menu_index: int -> Index of menu available on home page
-        :param submenu_index: int -> index of submenu wrt to menu
-        :return: open that page
-        """
-        self.click_sub_menu_element(menu_index,submenu_index)
-
-    # Text Boxes methods
     def set_full_name_input(self, full_name):
         self.driver.find_element(By.CSS_SELECTOR, self.username_input_css).send_keys(full_name)
 
+    # Text Boxes methods
     def set_email_input(self, email):
         email_element = self.driver.find_element(By.CSS_SELECTOR, self.email_input_css)
         self.driver.execute_script("arguments[0].value = arguments[1];", email_element, email)
@@ -158,14 +146,13 @@ class Element_Page:
         submit = self.driver.find_element(By.CSS_SELECTOR, self.submit_button_css)
         self.driver.execute_script("arguments[0].click()", submit)
 
-    # Check Box Methods
     def expand_all_checkboxes(self):
         self.driver.find_element(By.CLASS_NAME, self.expand_all_checkboxes_button_class).click()
 
+    # Check Box Methods
     def collapse_all_checkboxes(self):
         self.driver.find_element(By.CLASS_NAME, self.collapse_all_checkboxes_button_class).click()
 
-    # Radio Button methods
     def click_radio_button(self, value):
         """
         :param value: valid values ['yes', 'impressive','no']
@@ -182,14 +169,15 @@ class Element_Page:
         else:
             raise "Invalid input"
 
+    # Radio Button methods
     def get_message_on_radio_select(self):
         return self.driver.find_element(By.CLASS_NAME, self.msg_on_radio_select_class).text
 
-    # Methods for web tables elements
     def get_table_columns_name(self):
         columns = self.driver.find_elements(By.XPATH, self.table_columns_xpath)
         return [column.text for column in columns]
 
+    # Methods for web tables elements
     def get_table_rows_data(self):
         data = {}
         rows = self.driver.find_elements(By.CLASS_NAME, self.table_rows_data_class)
@@ -197,7 +185,7 @@ class Element_Page:
             data[index] = row.text.split("\n")
         return data
 
-    def add_new_record_and_get(self,fname,lname,email,age,salary,dept):
+    def add_new_record_and_get(self, fname, lname, email, age, salary, dept):
         """
 
         :param fname: str
@@ -219,11 +207,11 @@ class Element_Page:
         submit = form.find_element(By.ID, "submit")
         self.driver.execute_script("arguments[0].click()", submit)
 
-    # Buttons Methods:
     def double_click(self):
         double_btn = self.driver.find_element(By.ID, self.double_click_btn_id)
         self.act.double_click(double_btn).perform()
 
+    # Buttons Methods:
     def right_click(self):
         right_btn = self.driver.find_element(By.ID, self.right_click_btn_id)
         self.act.context_click(right_btn).perform()
@@ -256,3 +244,13 @@ class Element_Page:
             self.driver.find_element(By.ID, self.download_btn_id).click()
         else:
             pass
+
+    # Common for all menus
+    def open_sub_menus(self, menu_index, submenu_index):
+        """
+        Use this function to navigate to different pages like, element, forms, etc....
+        :param menu_index: int -> Index of menu available on home page
+        :param submenu_index: int -> index of submenu wrt to menu
+        :return: open that page
+        """
+        self.click_sub_menu_element(menu_index, submenu_index)

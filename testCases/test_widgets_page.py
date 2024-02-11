@@ -6,15 +6,22 @@ from pageObjects.widgets_page import Widgets_Page
 from pageObjects.elements_page import Element_Page
 
 
-class Test_Accordian:
+class Test:
+    menu_index = None
+    sub_menu_index = None
+
     @pytest.fixture(autouse=True)
     def init_setup(self, setup):
         self.driver = setup
         self.homepage = Homepage(self.driver)
         self.homepage.click_alertFrameWindow()
         self.elementpage = Element_Page(self.driver)
-        self.elementpage.open_sub_menus(3, 0)
+        self.elementpage.open_sub_menus(self.menu_index, self.sub_menu_index)
         self.widgets = Widgets_Page(self.driver)
+
+
+class Test_Accordian(Test):
+    menu_index, sub_menu_index = 3, 0
 
     def test_accordian_heading(self):
         assert "Accordian" == self.elementpage.get_header_text()
@@ -29,29 +36,15 @@ class Test_Accordian:
         assert exp_body in body_text
 
 
-class Test_Auto_Complete:
-    @pytest.fixture(autouse=True)
-    def init_setup(self, setup):
-        self.driver = setup
-        self.homepage = Homepage(self.driver)
-        self.homepage.click_alertFrameWindow()
-        self.elementpage = Element_Page(self.driver)
-        self.elementpage.open_sub_menus(3, 1)
-        self.widgets = Widgets_Page(self.driver)
+class Test_Auto_Complete(Test):
+    menu_index, sub_menu_index = 3, 1
 
     def test_auto_complete(self):
         pass
 
 
-class Test_Date_Picker:
-    @pytest.fixture(autouse=True)
-    def init_setup(self, setup):
-        self.driver = setup
-        self.homepage = Homepage(self.driver)
-        self.homepage.click_alertFrameWindow()
-        self.elementpage = Element_Page(self.driver)
-        self.elementpage.open_sub_menus(3, 2)
-        self.widgets = Widgets_Page(self.driver)
+class Test_Date_Picker(Test):
+    menu_index, sub_menu_index = 3, 2
 
     def test_date_picker(self):
         date = "20/09/2025"
@@ -71,15 +64,8 @@ class Test_Date_Picker:
 
 
 # Range Slider Page
-class Test_Range_Slider:
-    @pytest.fixture(autouse=True)
-    def init_setup(self, setup):
-        self.driver = setup
-        self.homepage = Homepage(self.driver)
-        self.homepage.click_alertFrameWindow()
-        self.elementpage = Element_Page(self.driver)
-        self.elementpage.open_sub_menus(3, 3)
-        self.widgets = Widgets_Page(self.driver)
+class Test_Range_Slider(Test):
+    menu_index, sub_menu_index = 3, 3
 
     def test_range_slider(self):
         self.widgets.set_range_slider_value(55)
@@ -87,30 +73,16 @@ class Test_Range_Slider:
         assert 55 == int(actual_value)
 
 
-class Test_Progress_Bar:
-    @pytest.fixture(autouse=True)
-    def init_setup(self, setup):
-        self.driver = setup
-        self.homepage = Homepage(self.driver)
-        self.homepage.click_alertFrameWindow()
-        self.elementpage = Element_Page(self.driver)
-        self.elementpage.open_sub_menus(3, 4)
-        self.widgets = Widgets_Page(self.driver)
+class Test_Progress_Bar(Test):
+    menu_index, sub_menu_index = 3, 4
 
     def test_progress_bar(self):
         self.widgets.set_progress_bar(3)
         assert True
 
 
-class Test_Tabs:
-    @pytest.fixture(autouse=True)
-    def init_setup(self, setup):
-        self.driver = setup
-        self.homepage = Homepage(self.driver)
-        self.homepage.click_alertFrameWindow()
-        self.elementpage = Element_Page(self.driver)
-        self.elementpage.open_sub_menus(3, 5)
-        self.widgets = Widgets_Page(self.driver)
+class Test_Tabs(Test):
+    menu_index, sub_menu_index = 3, 5
 
     @pytest.mark.parametrize("tab_name,expt_result", [('what', 'Lorem Ipsum is simply dummy text'),
                                                       ('use', 'It is a long established fact that a reader'),
@@ -122,15 +94,8 @@ class Test_Tabs:
         assert expt_result in content
 
 
-class Test_ToolTips:
-    @pytest.fixture(autouse=True)
-    def init_setup(self, setup):
-        self.driver = setup
-        self.homepage = Homepage(self.driver)
-        self.homepage.click_alertFrameWindow()
-        self.elementpage = Element_Page(self.driver)
-        self.elementpage.open_sub_menus(3, 6)
-        self.widgets = Widgets_Page(self.driver)
+class Test_ToolTips(Test):
+    menu_index, sub_menu_index = 3, 6
 
     def test_tool_tip_on_btn(self):
         msg = self.widgets.get_tool_tip_on_btn_msg()
@@ -141,15 +106,8 @@ class Test_ToolTips:
         assert "You hovered over the text field" == msg
 
 
-class Test_Menus:
-    @pytest.fixture(autouse=True)
-    def init_setup(self, setup):
-        self.driver = setup
-        self.homepage = Homepage(self.driver)
-        self.homepage.click_alertFrameWindow()
-        self.elementpage = Element_Page(self.driver)
-        self.elementpage.open_sub_menus(3, 7)
-        self.widgets = Widgets_Page(self.driver)
+class Test_Menus(Test):
+    menu_index, sub_menu_index = 3, 7
 
     def test_menu_item1_click(self):
         href = self.widgets.click_menu_item1()
@@ -159,15 +117,8 @@ class Test_Menus:
         self.widgets.test_hover_menu()
 
 
-class Test_Select_Menu:
-    @pytest.fixture(autouse=True)
-    def init_setup(self, setup):
-        self.driver = setup
-        self.homepage = Homepage(self.driver)
-        self.homepage.click_alertFrameWindow()
-        self.elementpage = Element_Page(self.driver)
-        self.elementpage.open_sub_menus(3, 8)
-        self.widgets = Widgets_Page(self.driver)
+class Test_Select_Menu(Test):
+    menu_index, sub_menu_index = 3, 8
 
     def test_select_value_field(self):
         text = self.widgets.select_value_dropdown()
