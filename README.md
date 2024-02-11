@@ -547,10 +547,84 @@ self.act.drag_and_drop(source_element, target_element).perform()
 self.act.drag_and_drop_by_offset(child, 20, 20)
 ```
 
+## Reports
+### 1. **HTML Report**
+- `pip install pytest-html`
+- Command to generate html report
+    ```python
+    # report will generate in Reports directory with report.html name
+    pytest --html=Reports/report.html
+   
+    # report will generate on root directory with filename report.html
+    pytest --html=report.html 
+   ```
+### 2. Allure Report
+- `pip install allure-pytest`
+- **Commands to generate allure report**
+```python
+# Generate all test cases report with allure, assign report directory as --alluredir=Directory_Name 
+pytest --alluredir=Reports/Allure_Report
 
-### 7. Book Store Application
+# Generate report with limited test cases
+pytest -n=5 --alluredir=Reports\Allure_Reports .\testCases\test_elements_page.py
+```
 
-This test suite covers automation of tests related to the "Book Store Application" section of the DemoQA website. It includes tests for login, browsing books, managing profile, and interacting with the book store API.
+- Once, report generate, need to **start allure server** to see the report result
+```python
+allure serve dir_name
+allure serve .\Reports\Allure_Reports\
+```
+    
+## Run Tests on Desired Web Browser
+To achieve this, will create hooks to give desired browser name
+```python
+#conftest.py
+
+def pytest_addoption(parser):  # this will get the value from the CLI/Hooks
+    parser.addoption("--browser")
+
+
+@pytest.fixture()
+def browser(request):  # this will return the browser value to the setup method
+    return request.config.getoption("--browser")
+
+# Fixture to create web driver open with desired browser, Chrome is default browser if no one given
+
+@pytest.fixture()
+def setup(browser):
+    if browser == 'chrome':
+        driver = webdriver.Chrome()
+    elif browser == 'firefox':
+        driver = webdriver.Firefox()
+    elif browser == 'edge':
+        driver = webdriver.Edge()
+    elif browser == 'safari':
+        driver = webdriver.Safari()
+    else:
+        driver = webdriver.Chrome()
+    driver.implicitly_wait(10)
+    driver.maximize_window()
+    driver.get(base_url)
+    yield driver
+    driver.quit()
+```
+Command to achieve this:
+```commandline
+# this will open in chrome
+pytest -n=5 --html=Reports/report.html --browser chrome
+
+# this is will open in edge
+pytest -n=5 --html=Reports/report.html --browser edge
+
+# this will open in firefox
+pytest -n=5 --html=Reports/report.html --browser firefox
+
+# this will open in safari
+pytest -n=5 --html=Reports/report.html --browser safari
+
+# this is default, will open in chrome
+pytest -n=5 --html=Reports/report.html
+```
 
 ## Contributing
 

@@ -1,0 +1,25 @@
+Message: no such element: Unable to locate element: {"method":"css selector","selector":".text-success"}
+  (Session info: chrome=121.0.6167.161); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#no-such-element-exception
+Stacktrace:
+	GetHandleVerifier [0x00007FF725645E42+3538674]
+	(No symbol) [0x00007FF725264C02]
+	(No symbol) [0x00007FF725115AEB]
+	(No symbol) [0x00007FF72515BF4E]
+	(No symbol) [0x00007FF72515C0CC]
+	(No symbol) [0x00007FF72519E477]
+	(No symbol) [0x00007FF72517F0EF]
+	(No symbol) [0x00007FF72519BDE3]
+	(No symbol) [0x00007FF72517EE53]
+	(No symbol) [0x00007FF72514F514]
+	(No symbol) [0x00007FF725150631]
+	GetHandleVerifier [0x00007FF725676CAD+3738973]
+	GetHandleVerifier [0x00007FF7256CC506+4089270]
+	GetHandleVerifier [0x00007FF7256C4823+4057299]
+	GetHandleVerifier [0x00007FF725395C49+720121]
+	(No symbol) [0x00007FF72527126F]
+	(No symbol) [0x00007FF72526C304]
+	(No symbol) [0x00007FF72526C432]
+	(No symbol) [0x00007FF72525BD04]
+	BaseThreadInitThunk [0x00007FFECF70257D+29]
+	RtlUserThreadStart [0x00007FFED166AA58+40]
+
