@@ -89,37 +89,10 @@ class Element_Page:
         menu_list = sub_menu.find_elements(By.TAG_NAME, 'li')
         self.driver.execute_script("arguments[0].click()", menu_list[sub_menu_id_index])
 
-    def click_text_box_sub_menu(self):
-        self.click_sub_menu_element(0, 0)
-
-    def click_check_box_sub_menu(self):
-        self.click_sub_menu_element(0, 1)
-
-    def click_radio_button_sub_menu(self):
-        self.click_sub_menu_element(0, 2)
-
-    def click_web_tables_sub_menu(self):
-        self.click_sub_menu_element(0, 3)
-
-    def click_buttons_sub_menu(self):
-        self.click_sub_menu_element(0, 4)
-
-    def click_links_sub_menu(self):
-        self.click_sub_menu_element(0, 5)
-
-    def click_broken_links_sub_menu(self):
-        self.click_sub_menu_element(0, 6)
-
-    def click_upload_download_sub_menu(self):
-        self.click_sub_menu_element(0, 7)
-
-    def click_dynamic_properties_sub_menu(self):
-        self.click_sub_menu_element(0, 8)
-
+    # Text Boxes page
     def set_full_name_input(self, full_name):
         self.driver.find_element(By.CSS_SELECTOR, self.username_input_css).send_keys(full_name)
 
-    # Text Boxes methods
     def set_email_input(self, email):
         email_element = self.driver.find_element(By.CSS_SELECTOR, self.email_input_css)
         self.driver.execute_script("arguments[0].value = arguments[1];", email_element, email)
@@ -134,6 +107,10 @@ class Element_Page:
         permanent_addr_element = self.driver.find_element(By.CSS_SELECTOR, self.permanent_address_textarea_css)
         self.driver.execute_script("arguments[0].value = arguments[1];", permanent_addr_element, permanent_addr)
 
+    def click_submit_button(self):
+        submit = self.driver.find_element(By.CSS_SELECTOR, self.submit_button_css)
+        self.driver.execute_script("arguments[0].click()", submit)
+
     def get_output_on_submit(self):
         time.sleep(2)
         name = self.driver.find_element(By.CSS_SELECTOR, "p#name").text
@@ -142,17 +119,15 @@ class Element_Page:
         perAddr = self.driver.find_element(By.CSS_SELECTOR, "p#permanentAddress").text
         return name + email + curAddr + perAddr
 
-    def click_submit_button(self):
-        submit = self.driver.find_element(By.CSS_SELECTOR, self.submit_button_css)
-        self.driver.execute_script("arguments[0].click()", submit)
-
+    # Check box page
     def expand_all_checkboxes(self):
-        self.driver.find_element(By.CLASS_NAME, self.expand_all_checkboxes_button_class).click()
+        return self.driver.find_element(By.CLASS_NAME, self.expand_all_checkboxes_button_class)
 
     # Check Box Methods
     def collapse_all_checkboxes(self):
-        self.driver.find_element(By.CLASS_NAME, self.collapse_all_checkboxes_button_class).click()
+        return self.driver.find_element(By.CLASS_NAME, self.collapse_all_checkboxes_button_class)
 
+    # Radio buttons
     def click_radio_button(self, value):
         """
         :param value: valid values ['yes', 'impressive','no']
@@ -169,7 +144,6 @@ class Element_Page:
         else:
             raise "Invalid input"
 
-    # Radio Button methods
     def get_message_on_radio_select(self):
         return self.driver.find_element(By.CLASS_NAME, self.msg_on_radio_select_class).text
 

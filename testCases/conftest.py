@@ -41,7 +41,13 @@ def pytest_configure(config):
     if metadata:
         config.stash[metadata_key]['Project Name'] = 'DemoQA Automation Framework'
         config.stash[metadata_key]['Module Name'] = 'DemoQA'
+        config.stash[metadata_key]['Base URL'] = base_url
         config.stash[metadata_key]['Tester'] = 'Santosh Kumar'
+
+
+# HTML Report title
+def pytest_html_report_title(report):
+    report.title = "DemoQA Test Framework!"
 
 
 # It is hooked for delete/Modify Environment info to HTML Report

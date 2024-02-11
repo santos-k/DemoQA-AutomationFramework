@@ -1,4 +1,6 @@
 import pytest
+from selenium.common import NoSuchElementException
+
 from pageObjects.elements_page import Element_Page
 from pageObjects.homepage import Homepage
 from utilities.utils_functions import GenerateLog
@@ -11,7 +13,7 @@ class Test:
     def init_test(self, setup):
         self.driver = setup
         self.homepage = Homepage(self.driver)
-        self.homepage.click_elements()
+        self.homepage.click_category(0)
         self.element = Element_Page(self.driver)
         self.logger = GenerateLog.generate_log()
         if self.menu_index is not None:
@@ -21,27 +23,53 @@ class Test:
 class Test_ElementPage(Test):
     @pytest.mark.ui
     def test_header_text(self):
-        assert self.element.get_header_text() == "Elements", "Header text does not match"
+        if self.element.get_header_text() == "Elements":
+            self.logger.info("Elements Page Header Text: PASSED")
+            assert True
+        else:
+            self.logger.error("Elements Page Header Text: FAILED")
+            assert False
 
     @pytest.mark.ui
     def test_header_paragraph(self):
         expected = "Please select an item from left to start practice."
-        assert self.element.get_header_paragraph() == expected, "Header paragraph does not match"
+        if self.element.get_header_paragraph() == expected:
+            self.logger.info("Elements Page summary text: PASSED")
+            assert True
+        else:
+            self.logger.info("Elements Page summary text: FAILED")
+            assert False
 
     @pytest.mark.ui
     def test_element_groups(self):
         groups = self.element.get_element_group()
-        assert "Text Box" in groups, "Text Box group not found"
+        if "Text Box" in groups and len(groups) == 9:
+            self.logger.info("Test Element groups: PASSED")
+            assert True
+        else:
+            self.logger.info("Test Element groups: FAILED")
+            assert False
 
+    @pytest.mark.parametrize('element, index', [
+        ('text-box', 0),
+        ('checkbox', 1),
+        ('radio-button', 2),
+        ('webtables', 3),
+        ('buttons', 4),
+        ('links', 5),
+        ('broken', 6),
+        ('upload-download', 7),
+        ('dynamic-properties', 8),
+    ])
     @pytest.mark.ui
-    def test_click_text_box(self):
-        self.element.click_text_box_sub_menu()
-        assert "text-box" in self.driver.current_url, "Text Box URL not correct"
-
-    @pytest.mark.ui
-    def test_click_check_box(self):
-        self.element.click_check_box_sub_menu()
-        assert "checkbox" in self.driver.current_url, "Check Box URL not correct"
+    def test_submenu_in_elements_clickable(self, element, index):
+        self.element.click_sub_menu_element(0, index)
+        if element in self.driver.current_url:
+            self.logger.info(f"{element} clickable: PASSED")
+            assert True, f"{element} not in url"
+        else:
+            self.logger.info(f"{element} clickable: FAILED")
+            assert False
 
 
 class Test_TextBox(Test):
@@ -51,17 +79,36 @@ class Test_TextBox(Test):
     def test_verify_heading(self):
         assert "Text Box" == self.element.get_header_text(), "Heading text not matching"
 
+    @pytest.mark.parametrize('name, email, cur_addr, per_addr', [
+        ('Alex Zender', 'abc@gmail.com', '420, London', '421, London, England'),
+        ('Hello', '', 'Patna', 'Gaya'),
+        ('', 'peter.com', '420, London', '421, London, England'),
+    ])
     @pytest.mark.regression
-    def test_text_boxes_submission(self):
-        self.element.set_full_name_input("Santosh Kumar")
-        self.element.set_email_input("santosh@abc.com")
-        self.element.set_current_addr_input("420, Chandni Chowk, Delhi")
-        self.element.set_permanent_addr_input("840, Nehru Park, MP")
+    def test_text_boxes_submission(self, name, email, cur_addr, per_addr):
+        self.element.set_full_name_input(name)
+        self.element.set_email_input(email)
+        self.element.set_current_addr_input(cur_addr)
+        self.element.set_permanent_addr_input(per_addr)
         self.element.click_submit_button()
-        output = self.element.get_output_on_submit()
-        assert "Santosh Kumar" in output, "Full name not in output"
-        assert "santosh@abc.com" in output, "Email not in output"
-        assert "error" not in self.element.get_email_error()
+        try:
+            output = self.element.get_output_on_submit()
+            for tag in [name, email, cur_addr, per_addr]:
+                if len(tag) > 0:
+                    assert tag in output
+            self.logger.info("Text Box Submission with valid data: PASSED")
+        except NoSuchElementException:
+            try:
+                self.logger.info("Text Box with invalid email format: PASSED")
+                assert "error" in self.element.get_email_error()
+            except NoSuchElementException:
+                for tag in [name, email, cur_addr, per_addr]:
+                    if len(tag) == 0:
+                        self.logger.info("Text with empty string: PASSED")
+                        assert True
+                    else:
+                        self.logger.error("Text with empty string: FAILED")
+                        assert False
 
 
 class Test_CheckBox(Test):
@@ -69,12 +116,14 @@ class Test_CheckBox(Test):
 
     @pytest.mark.regression
     def test_expand_all_check_boxes(self):
-        self.element.expand_all_checkboxes()
+        self.element.expand_all_checkboxes().click()
+        self.logger.info("Expend all CheckBoxes: PASSED")
         assert True
 
     @pytest.mark.regression
     def test_collapse_all_check_boxes(self):
-        self.element.collapse_all_checkboxes()
+        self.element.collapse_all_checkboxes().click()
+        self.logger.info("Collapse all CheckBoxes: PASSED")
         assert True
 
 

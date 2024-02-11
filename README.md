@@ -16,6 +16,9 @@ This project aims to automate testing for the [DemoQA](https://demoqa.com/) webs
     - [5. Widgets Page](#5-widgets-page)
     - [6. Interactions Page](#6-interactions-page)
     - [7. Book Store Application](#7-book-store-application)
+- [Generate Reports](#generate-reports)
+  - [Pytes-HTMl Report](#1-html-report)
+  - [Allure Report](#2-allure-report)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -547,7 +550,7 @@ self.act.drag_and_drop(source_element, target_element).perform()
 self.act.drag_and_drop_by_offset(child, 20, 20)
 ```
 
-## Reports
+## Generate Reports
 ### 1. **HTML Report**
 - `pip install pytest-html`
 - Command to generate html report
@@ -575,7 +578,7 @@ allure serve dir_name
 allure serve .\Reports\Allure_Reports\
 ```
     
-## Run Tests on Desired Web Browser
+## Cross-Browser Test Setup
 To achieve this, will create hooks to give desired browser name
 ```python
 #conftest.py
@@ -608,7 +611,7 @@ def setup(browser):
     yield driver
     driver.quit()
 ```
-Command to achieve this:
+Command to run test with different browsers:
 ```commandline
 # this will open in chrome
 pytest -n=5 --html=Reports/report.html --browser chrome

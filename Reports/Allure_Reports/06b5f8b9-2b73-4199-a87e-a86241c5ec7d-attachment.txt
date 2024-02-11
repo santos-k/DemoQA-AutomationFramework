@@ -1,1 +1,0 @@
-Columns in Table:  ['First Name\nLast Name\nAge\nEmail\nSalary\nDepartment\nAction']

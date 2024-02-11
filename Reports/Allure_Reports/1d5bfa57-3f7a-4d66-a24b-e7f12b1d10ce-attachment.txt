@@ -1,1 +1,0 @@
-Data:  {0: ['Cierra', 'Vega', '39', 'cierra@example.com', '10000', 'Insurance'], 1: ['Alden', 'Cantrell', '45', 'alden@example.com', '12000', 'Compliance'], 2: ['Kierra', 'Gentry', '29', 'kierra@example.com', '2000', 'Legal'], 3: ['       '], 4: ['       '], 5: ['       '], 6: ['       '], 7: ['       '], 8: ['       '], 9: ['       ']}

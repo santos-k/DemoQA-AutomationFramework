@@ -33,27 +33,9 @@ class Homepage:
     def get_header_element(self):
         return self.get_element_by_tag(self.header_tag_name)
 
-    def get_footer(self):
+    def get_footer_element(self):
         return self.get_element_by_tag(self.footer_tag_name)
 
     def get_nums_of_category_and_names(self):
         divs = self.driver.find_elements(By.XPATH, self.category_card_xpath)
         return len(divs), [div.text for div in divs]
-
-    def click_elements(self):
-        self.click_category(0)
-
-    def click_forms(self):
-        self.click_category(1)
-
-    def click_alertFrameWindow(self):
-        self.click_category(2)
-
-    def click_widgets(self):
-        self.click_category(3)
-
-    def click_interactions(self):
-        self.click_category(4)
-
-    def click_book_app(self):
-        self.click_category(5)
