@@ -628,6 +628,54 @@ pytest -n=5 --html=Reports/report.html --browser safari
 # this is default, will open in chrome
 pytest -n=5 --html=Reports/report.html
 ```
+## Attach Screenshot to Report
+### 1. Attach Screenshot to Pytest-HTML Report
+If test case got failed then take screenshot and attach to html report only if report generate.
+- Code to take screenshot and attach to report, below code added to `conftest.py`
+    ```python
+    import pytest_html
+    from datetime import datetime
+    
+    # Define a pytest hook to handle test report creation
+    @pytest.hookimpl(hookwrapper=True)
+    def pytest_runtest_makereport(item, call):
+        # Get the outcome of the test
+        outcome = yield
+    
+        # Extract the report from the outcome
+        report = outcome.get_result()
+    
+        # Get any existing extras attached to the report, or create an empty list
+        extras = getattr(report, "extra", [])
+    
+        # Check if the report is from a test execution or test setup phase
+        if report.when == "call" or report.when == "setup":
+    
+            # Check if the test was expected to fail
+            xfail = hasattr(report, "wasxfail")
+    
+            # Check if the test was skipped and marked as an expected failure (xfail),
+            # or if the test failed and was not marked as expected to fail
+            if (report.skipped and xfail) or (report.failed and not xfail):
+                # Get the current time and date for timestamping the screenshot
+                current_time = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+                current_date = datetime.now().strftime("%Y-%m-%d")
+    
+                # Define the file path where the screenshot will be saved
+                file_path = f"C:\\Automation\\Python\\DemoQA-Automation\\Screenshots\\Failed_Screenshot_{current_time}.png"
+    
+                # Take a screenshot using the 'driver' object, assuming it's available in the scope
+                driver.get_screenshot_as_file(file_path)
+    
+                # Define HTML code for displaying the screenshot in the HTML report
+                extra_html = f'<div><img src="{file_path}" style="width:250px;height:180px;" onclick="window.open(this.src)" align="right"/></div>'
+    
+                # Append the HTML code to the extras list
+                extras.append(pytest_html.extras.html(extra_html))
+    
+        # Assign the updated extras list back to the report
+        report.extra = extras
+    ```
 
 ## Contributing
 

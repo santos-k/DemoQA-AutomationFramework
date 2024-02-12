@@ -8,7 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 class Element_Page:
     main_header_text_class = "main-header"  # Main element category heading
-    text_id = "Ad.Plus-728x90"  # text to start
+    text_xpath = "//*[@id='Ad.Plus-728x90']/parent::div"  # text to start
     accordian_class = "accordion"  # inside this div all element category list present
     elements_group_div_class = "element-group"  # inside this group header and element-list present
     groups_header_span_class = "group-header"  # inside this element header name text and collapse button present
@@ -52,7 +52,7 @@ class Element_Page:
     # Elements on Buttons page
     double_click_btn_id = "doubleClickBtn"
     right_click_btn_id = "rightClickBtn"
-    dynamic_click_btn_id = "Dkj0l"
+    dynamic_click_btn_xpath = "//*[text()='Click Me']"
     double_click_message_id = "doubleClickMessage"
     right_click_message_id = "rightClickMessage"
     dynamic_click_message_id = "dynamicClickMessage"
@@ -67,6 +67,12 @@ class Element_Page:
     upload_id = "uploadFile"
     upload_file_path_id = "uploadedFilePath"
 
+    # Dynamics Properties
+    text_has_random_id_xpath = "//*[@id='enableAfter']/preceding-sibling::p"
+    btn_enable_after_5_secs_id = "enableAfter"
+    btn_text_color_changes_id = "colorChange"
+    btn_visible_after_5_secs_id = "visibleAfter"
+
     def __init__(self, driver):
         self.driver = driver
         self.act = ActionChains(self.driver)
@@ -75,7 +81,7 @@ class Element_Page:
         return self.driver.find_element(By.CLASS_NAME, self.main_header_text_class).text
 
     def get_header_paragraph(self):
-        return self.driver.find_element(By.ID, self.text_id).text
+        return self.driver.find_element(By.XPATH, self.text_xpath).text
 
     def get_element_group(self):
         menus = self.driver.find_elements(By.CLASS_NAME, self.elements_group_div_class)
@@ -181,14 +187,22 @@ class Element_Page:
         submit = form.find_element(By.ID, "submit")
         self.driver.execute_script("arguments[0].click()", submit)
 
+    # Buttons clicks
     def double_click(self):
         double_btn = self.driver.find_element(By.ID, self.double_click_btn_id)
+        self.driver.execute_script("arguments[0].scrollIntoView();", double_btn)
         self.act.double_click(double_btn).perform()
 
     # Buttons Methods:
     def right_click(self):
         right_btn = self.driver.find_element(By.ID, self.right_click_btn_id)
+        self.driver.execute_script("arguments[0].scrollIntoView();", right_btn)
         self.act.context_click(right_btn).perform()
+
+    def dynamic_click(self):
+        dynamic_btn = self.driver.find_element(By.XPATH, self.dynamic_click_btn_xpath)
+        self.driver.execute_script("arguments[0].scrollIntoView();", dynamic_btn)
+        self.act.click(dynamic_btn).perform()
 
     def get_click_message(self, nclick):
         message = None
@@ -228,3 +242,16 @@ class Element_Page:
         :return: open that page
         """
         self.click_sub_menu_element(menu_index, submenu_index)
+
+    # Dynamics Properties methods
+    def random_text_id(self):
+        return self.driver.find_element(By.XPATH, self.text_has_random_id_xpath)
+
+    def btn_enable_after_5_secs(self):
+        return self.driver.find_element(By.ID, self.btn_enable_after_5_secs_id)
+
+    def btn_changes_color(self):
+        return self.driver.find_element(By.ID, self.btn_text_color_changes_id)
+
+    def btn_visible_after_5_secs(self):
+        return  self.driver.find_element(By.ID, self.btn_visible_after_5_secs_id)

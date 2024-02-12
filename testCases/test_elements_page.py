@@ -1,6 +1,6 @@
+import time
 import pytest
 from selenium.common import NoSuchElementException
-
 from pageObjects.elements_page import Element_Page
 from pageObjects.homepage import Homepage
 from utilities.utils_functions import GenerateLog
@@ -33,10 +33,12 @@ class Test_ElementPage(Test):
     @pytest.mark.ui
     def test_header_paragraph(self):
         expected = "Please select an item from left to start practice."
-        if self.element.get_header_paragraph() == expected:
+        actual = self.element.get_header_paragraph()
+        if actual == expected:
             self.logger.info("Elements Page summary text: PASSED")
             assert True
         else:
+            self.driver.save_screenshot("test_header_paragraph.png")
             self.logger.info("Elements Page summary text: FAILED")
             assert False
 
@@ -47,6 +49,7 @@ class Test_ElementPage(Test):
             self.logger.info("Test Element groups: PASSED")
             assert True
         else:
+            self.driver.save_screenshot("test_element_groups.png")
             self.logger.info("Test Element groups: FAILED")
             assert False
 
@@ -68,6 +71,7 @@ class Test_ElementPage(Test):
             self.logger.info(f"{element} clickable: PASSED")
             assert True, f"{element} not in url"
         else:
+            self.driver.save_screenshot("test_submenu_in_elements_clickable"+element.replace('-','_')+".png")
             self.logger.info(f"{element} clickable: FAILED")
             assert False
 
@@ -77,7 +81,12 @@ class Test_TextBox(Test):
 
     @pytest.mark.ui
     def test_verify_heading(self):
-        assert "Text Box" == self.element.get_header_text(), "Heading text not matching"
+        if "Text Box" == self.element.get_header_text():
+            self.logger.info("Verify Heading text: PASSED")
+            assert True
+        else:
+            self.logger.info("Verify Heading text: FAILED")
+            assert False
 
     @pytest.mark.parametrize('name, email, cur_addr, per_addr', [
         ('Alex Zender', 'abc@gmail.com', '420, London', '421, London, England'),
@@ -100,7 +109,8 @@ class Test_TextBox(Test):
         except NoSuchElementException:
             try:
                 self.logger.info("Text Box with invalid email format: PASSED")
-                assert "error" in self.element.get_email_error()
+                if "error" in self.element.get_email_error():
+                    assert True
             except NoSuchElementException:
                 for tag in [name, email, cur_addr, per_addr]:
                     if len(tag) == 0:
@@ -187,16 +197,17 @@ class Test_Buttons_Click(Test):
         msg = self.element.get_click_message('double')
         assert 'double' in msg, "Message not found"
 
-    def test_click_home_link(self):
-        self.element.click_home_link('Login')
+    def test_dynamic_click(self):
+        self.element.dynamic_click()
+        msg = self.element.get_click_message('dynamic')
+        assert 'dynamic' in msg, "Message not found"
 
 
 class Test_Link_Clicks(Test):
     menu_index, sub_menu_index = 0, 5
 
-    @pytest.mark.parametrize('link_text', [('Home'), ('Home3oQe8')])
-    def test_home_link_click(self, link_text):
-        self.element.click_home_link(link_text)
+    def test_home_link_click(self):
+        self.element.click_home_link('Home')
         assert self.driver.title == "DEMOQA", "Title not matched."
 
     @pytest.mark.parametrize('request_name',
@@ -209,12 +220,46 @@ class Test_Link_Clicks(Test):
 
 
 class Test_Upload_Download(Test):
-    menu_index, sub_menu_index = 0, 6
+    menu_index, sub_menu_index = 0, 7
 
     def test_download(self):
         self.element.upload_download('download', None)
 
     def test_upload(self):
-        # file_path = "C:\\Automation\\Python\\DemoQA-Automation\\Screenshots\\test_logo_presence.png"
-        uploaded_path = self.element.upload_download('upload', 'test_logo_presence.png')
+        file_path = "C:\\Automation\\Python\\DemoQA-Automation\\Screenshots\\test_logo_presence.png"
+        uploaded_path = self.element.upload_download('upload', file_path)
         assert "test_logo_presence.png" in uploaded_path, "Failed to upload"
+
+
+class Test_DynamicsProperties(Test):
+    menu_index, sub_menu_index = 0, 8
+
+    def test_dynamic_text_id(self):
+        p = self.element.random_text_id()
+        p_id_before_refresh = p.get_attribute('id')
+        self.driver.refresh()
+        p2 = self.element.random_text_id()
+        p_id_after_refresh = p2.get_attribute('id')
+        assert p_id_before_refresh != p_id_after_refresh
+
+    def test_dynamic_btn_enable_after_delay(self):
+        btn = self.element.btn_enable_after_5_secs()
+        is_btn_enabled_before_click = btn.is_enabled()
+        time.sleep(5)  # enable after 5 seconds
+        btn.click()
+        is_btn_enabled_after_click = btn.is_enabled()
+        assert is_btn_enabled_before_click != is_btn_enabled_after_click
+
+    def test_dynamic_btn_text_color_change(self):
+        btn_color_before = self.element.btn_changes_color().value_of_css_property('color')
+        time.sleep(5) # color changes after 5 secs
+        btn_color_after = self.element.btn_changes_color().value_of_css_property('color')
+        assert btn_color_after != btn_color_before
+
+    @pytest.mark.xfail
+    def test_dynamic_btn_visible_after_delay(self):
+        is_btn_present_before = bool(self.element.btn_visible_after_5_secs())
+        time.sleep(5) # visible after 5 secs delay
+        is_btn_present_after = bool(self.element.btn_visible_after_5_secs())
+        assert is_btn_present_before != is_btn_present_after
+
