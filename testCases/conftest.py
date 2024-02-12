@@ -19,18 +19,22 @@ def setup(browser_setup):
         if browser == 'chrome':
             chrome_options = ChromeOptions()
             chrome_options.add_argument('--headless')
+            chrome_options.add_argument('--window-size=1920,1080')
             driver = webdriver.Chrome(options=chrome_options)
         elif browser == 'firefox':
             firefox_options = FirefoxOptions()
             firefox_options.add_argument('--headless')
+            firefox_options.add_argument('--window-size=1920,1080')
             driver = webdriver.Firefox(options=firefox_options)
         elif browser == 'edge':
             edge_options = EdgeOptions()
             edge_options.add_argument('--headless')
+            edge_options.add_argument('--window-size=1920,1080')
             driver = webdriver.Edge(options=edge_options)
         else:
             chrome_options = ChromeOptions()
             chrome_options.add_argument('--headless')
+            chrome_options.add_argument('--window-size=1920,1080')
             driver = webdriver.Chrome(options=chrome_options)  # Default to Chrome if no specific browser is provided
     else:
         if browser == 'chrome':
@@ -102,4 +106,4 @@ def pytest_runtest_makereport(item, call):
             driver.get_screenshot_as_file(file_path)
             extra_html = f'<div><img src="{file_path}" style="width:250px;height:180px;" onclick="window.open(this.src)" align="right"/></div>'
             extras.append(pytest_html.extras.html(extra_html))
-        report.extra = extras
+        report.extras = extras

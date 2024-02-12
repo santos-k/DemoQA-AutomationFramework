@@ -11,7 +11,7 @@ class Test:
     def init_test(self, setup):
         self.driver = setup
         self.homepage = Homepage(self.driver)
-        self.homepage.click_forms()
+        self.homepage.click_category(1)
         self.elementpage = Element_Page(self.driver)
         self.elementpage.open_sub_menus(self.menu_index,self.sub_menu_index)
         self.formpage = Forms_Page(self.driver)

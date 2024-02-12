@@ -14,7 +14,7 @@ class Test:
     def init_setup(self, setup):
         self.driver = setup
         self.homepage = Homepage(self.driver)
-        self.homepage.click_alertFrameWindow()
+        self.homepage.click_category(3)
         self.elementpage = Element_Page(self.driver)
         self.elementpage.open_sub_menus(self.menu_index, self.sub_menu_index)
         self.widgets = Widgets_Page(self.driver)

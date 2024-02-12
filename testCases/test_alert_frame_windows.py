@@ -12,7 +12,7 @@ class Test:
     def init_test(self, setup):
         self.driver = setup
         self.homepage = Homepage(self.driver)
-        self.homepage.click_alertFrameWindow()
+        self.homepage.click_category(2)
         self.elements_page = Element_Page(self.driver)
         self.elements_page.open_sub_menus(self.menu_index, self.sub_menu_index)
         self.alert_page = Alert_Frame_Widows_Page(self.driver)
