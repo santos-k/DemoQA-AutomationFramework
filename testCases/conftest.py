@@ -1,27 +1,49 @@
-import os
-from datetime import datetime
-
 import pytest
 import pytest_html
+from datetime import datetime
 from selenium import webdriver
 from pytest_metadata.plugin import metadata_key
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.edge.options import Options as EdgeOptions
 
 base_url = "https://demoqa.com/"
 
 
 @pytest.fixture()
-def setup(browser):
+def setup(browser_setup):
     global driver  # this for taking screenshot
-    if browser == 'chrome':
-        driver = webdriver.Chrome()
-    elif browser == 'firefox':
-        driver = webdriver.Firefox()
-    elif browser == 'edge':
-        driver = webdriver.Edge()
-    elif browser == 'safari':
-        driver = webdriver.Safari()
+    browser, headless = browser_setup
+    # print(f"Headless: {headless}, Browser: {browser}")
+    if headless == 'y':
+        if browser == 'chrome':
+            chrome_options = ChromeOptions()
+            chrome_options.add_argument('--headless')
+            driver = webdriver.Chrome(options=chrome_options)
+        elif browser == 'firefox':
+            firefox_options = FirefoxOptions()
+            firefox_options.add_argument('--headless')
+            driver = webdriver.Firefox(options=firefox_options)
+        elif browser == 'edge':
+            edge_options = EdgeOptions()
+            edge_options.add_argument('--headless')
+            driver = webdriver.Edge(options=edge_options)
+        else:
+            chrome_options = ChromeOptions()
+            chrome_options.add_argument('--headless')
+            driver = webdriver.Chrome(options=chrome_options)  # Default to Chrome if no specific browser is provided
     else:
-        driver = webdriver.Chrome()
+        if browser == 'chrome':
+            driver = webdriver.Chrome()
+        elif browser == 'firefox':
+            driver = webdriver.Firefox()
+        elif browser == 'edge':
+            driver = webdriver.Edge()
+        elif browser == 'safari':
+            driver = webdriver.Safari()
+        else:
+            driver = webdriver.Chrome()  # Default to Chrome if no specific browser is provided
+
     driver.implicitly_wait(10)
     driver.maximize_window()
     driver.get(base_url)
@@ -29,13 +51,18 @@ def setup(browser):
     driver.quit()
 
 
-def pytest_addoption(parser):  # this will get the value from the CLI/Hooks
+# This will get the value from the CLI/Hooks
+def pytest_addoption(parser):
     parser.addoption("--browser")
+    parser.addoption("--headless")
 
 
+# This will return the browser value and headless mode to the setup method
 @pytest.fixture()
-def browser(request):  # this will return the browser value to the setup method
-    return request.config.getoption("--browser")
+def browser_setup(request):
+    browser_value = request.config.getoption("--browser")
+    headless_value = request.config.getoption("--headless")
+    return browser_value, headless_value
 
 
 # Pytest HTML Reports
@@ -71,7 +98,7 @@ def pytest_runtest_makereport(item, call):
         if (report.skipped and xfail) or (report.failed and not xfail):
             current_time = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
             current_date = datetime.now().strftime("%Y-%m-%d")
-            file_path = f"C:\Automation\Python\DemoQA-Automation\Screenshots\Failed_Screenshot_{current_time}.png"
+            file_path = f"C:\\Automation\\Python\\DemoQA-Automation\\Screenshots\\Failed_Screenshot_{current_time}.png"
             driver.get_screenshot_as_file(file_path)
             extra_html = f'<div><img src="{file_path}" style="width:250px;height:180px;" onclick="window.open(this.src)" align="right"/></div>'
             extras.append(pytest_html.extras.html(extra_html))

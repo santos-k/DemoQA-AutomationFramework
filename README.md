@@ -17,8 +17,10 @@ This project aims to automate testing for the [DemoQA](https://demoqa.com/) webs
     - [6. Interactions Page](#6-interactions-page)
     - [7. Book Store Application](#7-book-store-application)
 - [Generate Reports](#generate-reports)
-  - [Pytes-HTMl Report](#1-html-report)
+  - [Pytes-HTML Report](#1-html-report)
   - [Allure Report](#2-allure-report)
+- [Cross-Browser Test Setup](#cross-browser-test-setup)
+- [Run Tests in Headless mode](#run-tests-in-headless-mode)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -161,82 +163,82 @@ This test suite focuses on automating tests related to the "Elements" section of
 #### Elements on this Page:
 1. **Text Box**
     - using **send_keys()** method
-   ```python
-    self.driver.find_element(By.CSS_SELECTOR, self.username_input_css).send_keys(full_name)
-    ```
+```python
+self.driver.find_element(By.CSS_SELECTOR, self.username_input_css).send_keys(full_name)
+```
    - using **execute_script()** method
-   ```python
-    email_element = self.driver.find_element(By.CSS_SELECTOR, self.email_input_css)
-    self.driver.execute_script("arguments[0].value = arguments[1];", email_element, "abc@gmail.com")
-    ```
+```python
+email_element = self.driver.find_element(By.CSS_SELECTOR, self.email_input_css)
+self.driver.execute_script("arguments[0].value = arguments[1];", email_element, "abc@gmail.com")
+```
 2. **Check Box**
-    ```python
-    self.driver.find_element(By.CLASS_NAME, self.expand_all_checkboxes_button_class).click()
-    ```
+```python
+self.driver.find_element(By.CLASS_NAME, self.expand_all_checkboxes_button_class).click()
+```
 3. **Radio Button**
-    ```python
-    if value.lower() == "yes":
-        yes_radio = self.driver.find_element(By.CSS_SELECTOR, self.yes_radio_btn_css)
-        self.driver.execute_script("arguments[0].click()", yes_radio)
-    elif value.lower() == "impressive":
-        impressive_radio = self.driver.find_element(By.CSS_SELECTOR, self.impressive_radio_btn_css)
-        self.driver.execute_script("arguments[0].click()", impressive_radio)
-    elif value.lower() == 'no':
-        return self.driver.find_element(By.CSS_SELECTOR, self.no_radio_btn_css).is_enabled()
-    ```
+```python
+if value.lower() == "yes":
+    yes_radio = self.driver.find_element(By.CSS_SELECTOR, self.yes_radio_btn_css)
+    self.driver.execute_script("arguments[0].click()", yes_radio)
+elif value.lower() == "impressive":
+    impressive_radio = self.driver.find_element(By.CSS_SELECTOR, self.impressive_radio_btn_css)
+    self.driver.execute_script("arguments[0].click()", impressive_radio)
+elif value.lower() == 'no':
+    return self.driver.find_element(By.CSS_SELECTOR, self.no_radio_btn_css).is_enabled()
+```
 4. **Web Tables**
 - Get tables header/columns name
-   ```python
-   def get_table_columns_name(self):
-       columns = self.driver.find_elements(By.XPATH, self.table_columns_xpath)
-       return [column.text for column in columns]
-   ```
+```python
+def get_table_columns_name(self):
+   columns = self.driver.find_elements(By.XPATH, self.table_columns_xpath)
+   return [column.text for column in columns]
+```
   - Get Table rows records as dict
-   ```python
-   def get_table_rows_data(self):
-       data = {}
-       rows = self.driver.find_elements(By.CLASS_NAME, self.table_rows_data_class)
-       for index, row in enumerate(rows):
-           data[index] = row.text.split("\n")
-       return data
-   ```
+```python
+def get_table_rows_data(self):
+   data = {}
+   rows = self.driver.find_elements(By.CLASS_NAME, self.table_rows_data_class)
+   for index, row in enumerate(rows):
+       data[index] = row.text.split("\n")
+   return data
+```
 5. **Buttons**
 - Double Click
-    ```python
-    def double_click(self):
-        double_btn = self.driver.find_element(By.ID, self.double_click_btn_id)
-        self.act.double_click(double_btn).perform()
-    ```
+```python
+def double_click(self):
+    double_btn = self.driver.find_element(By.ID, self.double_click_btn_id)
+    self.act.double_click(double_btn).perform()
+```
 - Right Click also known as context click
-  ```python
+```python
   def right_click(self):
       right_btn = self.driver.find_element(By.ID, self.right_click_btn_id)
       self.act.context_click(right_btn).perform()
-  ```
+```
 6. **Links**
-     ```python
-        self.driver.find_element(By.LINK_TEXT, link_text).click()
-        or 
-        click_link = self.driver.find_element(By.LINK_TEXT, link_text)
-        self.driver.execute_script("arguments[0].click()", click_link)
-    ```
+ ```python
+    self.driver.find_element(By.LINK_TEXT, link_text).click()
+    or 
+    click_link = self.driver.find_element(By.LINK_TEXT, link_text)
+    self.driver.execute_script("arguments[0].click()", click_link)
+```
 7. **Broken Images - Links**: similar as links
 8. **Upload and Download**
 ```python
-    def upload_download(self, n, file):
-        if n == 'upload':
-            self.driver.find_element(By.ID, self.upload_id).send_keys(file)
-            return self.driver.find_element(By.ID, self.upload_file_path_id).text
-        elif n == 'download':
-            self.driver.find_element(By.ID, self.download_btn_id).click()
-        else:
-            pass
+def upload_download(self, n, file):
+    if n == 'upload':
+        self.driver.find_element(By.ID, self.upload_id).send_keys(file)
+        return self.driver.find_element(By.ID, self.upload_file_path_id).text
+    elif n == 'download':
+        self.driver.find_element(By.ID, self.download_btn_id).click()
+    else:
+        pass
 ```
 9. **Dynamic Properties**: like elements will appear after 5 seconds, text color change, visible for 5 seconds
-    ```python
-    time.sleep(5)
-    self.driver.find_element(By.LINK_TEXT, "Login").click()
-    ```
+```python
+time.sleep(5)
+self.driver.find_element(By.LINK_TEXT, "Login").click()
+```
 
 ### 3. Forms Page
 
@@ -245,35 +247,35 @@ This test suite covers automation of tests related to the "Forms" section of the
 - Text box, check box, radio button, textarea, upload, dropdown
 - **Check Boxe**:
   - Method to work with 3 check boxes, first uncheck all checked boxes ,then check as per required
-    ```python
-        def set_hobbies(self, s=False, m=False, r=False):
-            checkboxes = {
-                'sports': (self.sports_hobbies_checkbox_id, s),
-                'music': (self.music_hobbies_checkbox_id, m),
-                'reading': (self.reading_hobbies_checkbox_id, r)
-            }
-    
-            for hobby, (checkbox_id, flag) in checkboxes.items():
-                checkbox = self.driver.find_element(By.ID, checkbox_id)
-                if flag != checkbox.is_selected():
-                    self.driver.execute_script("arguments[0].click()", checkbox)
-    ```
+```python
+  def set_hobbies(self, s=False, m=False, r=False):
+      checkboxes = {
+          'sports': (self.sports_hobbies_checkbox_id, s),
+          'music': (self.music_hobbies_checkbox_id, m),
+          'reading': (self.reading_hobbies_checkbox_id, r)
+      }
+
+      for hobby, (checkbox_id, flag) in checkboxes.items():
+          checkbox = self.driver.find_element(By.ID, checkbox_id)
+          if flag != checkbox.is_selected():
+              self.driver.execute_script("arguments[0].click()", checkbox)
+```
 - **Dropdown**:
   - Method for dropdown select
-      ```python
-          def set_state_city(self, state_index, city_index):
-              state_dropdown = self.driver.find_element(By.XPATH, self.state_dropdown_id).click()
-              state_dropdown.click()
-              option_div = self.driver.find_element(By.XPATH, self.dropdown_options_xpath)
-              options = option_div.find_elements(By.TAG_NAME, 'div')
-              options[state_index].click()
-    
-              state_dropdown = self.driver.find_element(By.XPATH, self.city_dropdown_id).click()
-              state_dropdown.click()
-              option_div = self.driver.find_element(By.XPATH, self.dropdown_options_xpath)
-              options = option_div.find_elements(By.TAG_NAME, 'div')
-              options[city_index].click()
-      ```
+```python
+    def set_state_city(self, state_index, city_index):
+        state_dropdown = self.driver.find_element(By.XPATH, self.state_dropdown_id).click()
+        state_dropdown.click()
+        option_div = self.driver.find_element(By.XPATH, self.dropdown_options_xpath)
+        options = option_div.find_elements(By.TAG_NAME, 'div')
+        options[state_index].click()
+
+        state_dropdown = self.driver.find_element(By.XPATH, self.city_dropdown_id).click()
+        state_dropdown.click()
+        option_div = self.driver.find_element(By.XPATH, self.dropdown_options_xpath)
+        options = option_div.find_elements(By.TAG_NAME, 'div')
+        options[city_index].click()
+```
 
 ### 4. Alerts, Frame & Windows Page
 
@@ -281,95 +283,96 @@ This test suite focuses on automating tests related to the "Alerts, Frame & Wind
 #### Elements on this page:
 1. New Tabs and windows
    - Open new tab 
-    ```python
-        # Switch to the new tab
-        driver.switch_to.window("new_tab")
+```python
+    # Switch to the new tab
+    driver.switch_to.window("new_tab")
+
+    # Open another tab in the new window
+    driver.execute_script("window.open('https://www.example.com/page4', 'another_tab')")
+``` 
+- Open new window
+```python
+    # Switch to the new blank window
+    driver.switch_to.window("new_window")
    
-        # Open another tab in the new window
-        driver.execute_script("window.open('https://www.example.com/page4', 'another_tab')")
-    ``` 
-    - Open new window
-    ```python
-        # Switch to the new blank window
-        driver.switch_to.window("new_window")
-       
-        # Open a new window with url
-        driver.execute_script("window.open('https://www.example.com/page3', 'new_window')")
-    ```
+    # Open a new window with url
+    driver.execute_script("window.open('https://www.example.com/page3', 'new_window')")
+```
    - Switch between windows
-   ```python
-   win_handles = self.driver.window_handles
-   self.driver.switch_to.window(win_handles[1])
-   ```
+```python
+win_handles = self.driver.window_handles
+self.driver.switch_to.window(win_handles[1])
+```
    
 2. Alerts, Confirm and Prompt
    1. Alerts
-      ```python    
-      def test_alert(self):
-        self.alertpage.click_alert_button()
-        alert = self.driver.switch_to.alert
-        alert.accept()
-        assert "You clicked a button" == alert.text```
+```python    
+def test_alert(self):
+ self.alertpage.click_alert_button()
+ alert = self.driver.switch_to.alert
+ alert.accept()
+ assert "You clicked a button" == alert.text
+```
    2. Confirm
-   ```python
-    @pytest.mark.parametrize('act', [('accept'), ('dismiss')])
-    def test_confirm_alert(self, act):
-        self.alertpage.click_confirm_button()
-        confirm = self.driver.switch_to.alert
-        assert "Do you confirm action?" == confirm.text
-        if act == "accept":
-            confirm.accept()
-            msg = self.alertpage.get_confirm_result()
-            assert "You selected Ok" == msg
-        elif act == "dismiss":
-            confirm.dismiss()
-            msg = self.alertpage.get_confirm_result()
-            assert "You selected Cancel" == msg
-   ```
+```python
+@pytest.mark.parametrize('act', [('accept'), ('dismiss')])
+def test_confirm_alert(self, act):
+    self.alertpage.click_confirm_button()
+    confirm = self.driver.switch_to.alert
+    assert "Do you confirm action?" == confirm.text
+    if act == "accept":
+        confirm.accept()
+        msg = self.alertpage.get_confirm_result()
+        assert "You selected Ok" == msg
+    elif act == "dismiss":
+        confirm.dismiss()
+        msg = self.alertpage.get_confirm_result()
+        assert "You selected Cancel" == msg
+```
    3. Prompt
-   ```python
-    @pytest.mark.parametrize('act', [('accept'), ('dismiss')])
-    def test_prompt(self, act):
-        self.alertpage.click_prompt()
-        prompt = self.driver.switch_to.alert
-        msg = prompt.text
-        assert "Please enter your name" == msg
-        if act == 'accept':
-            prompt.send_keys("Hello Peter")
-            prompt.accept()
-            msg = self.alertpage.get_prompt_result()
-            assert msg == "You entered Hello Peter"
-        elif act == 'dismiss':
-            prompt.dismiss()
-            assert True
-   ```
+```python
+@pytest.mark.parametrize('act', [('accept'), ('dismiss')])
+def test_prompt(self, act):
+    self.alertpage.click_prompt()
+    prompt = self.driver.switch_to.alert
+    msg = prompt.text
+    assert "Please enter your name" == msg
+    if act == 'accept':
+        prompt.send_keys("Hello Peter")
+        prompt.accept()
+        msg = self.alertpage.get_prompt_result()
+        assert msg == "You entered Hello Peter"
+    elif act == 'dismiss':
+        prompt.dismiss()
+        assert True
+```
 3. Frames
-    ```python
-        def test_large_frame(self):
-            self.driver.switch_to.frame(self.alertpage.large_frame_id)
-            text = self.alertpage.get_large_frame_content()
-            assert text == "This is a sample page"
-    ```
+```python
+def test_large_frame(self):
+    self.driver.switch_to.frame(self.alertpage.large_frame_id)
+    text = self.alertpage.get_large_frame_content()
+    assert text == "This is a sample page"
+```
 4. Nested Frames
-    ```python
-        def test_parent_frame(self):
-            self.driver.switch_to.frame(self.alertpage.parent_frame_id)
-            content = self.alertpage.get_parent_frame_content()
-            assert "Parent frame" == content
-    
-            self.driver.switch_to.frame(0)
-            content = self.alertpage.get_parent_frame_content()
-            assert "Child Iframe" == content
-    ```
+```python
+def test_parent_frame(self):
+    self.driver.switch_to.frame(self.alertpage.parent_frame_id)
+    content = self.alertpage.get_parent_frame_content()
+    assert "Parent frame" == content
+
+    self.driver.switch_to.frame(0)
+    content = self.alertpage.get_parent_frame_content()
+    assert "Child Iframe" == content
+```
 5. Modal Dialogs
 ```python
-    def test_small_model(self):
-        self.alertpage.get_small_model()
-        title = self.alertpage.get_model_title()
-        body = self.alertpage.get_model_body_text()
-        assert "Small Modal" in title
-        assert "small modal" in body
-        self.alertpage.close_model_by_btn('s')
+def test_small_model(self):
+    self.alertpage.get_small_model()
+    title = self.alertpage.get_model_title()
+    body = self.alertpage.get_model_body_text()
+    assert "Small Modal" in title
+    assert "small modal" in body
+    self.alertpage.close_model_by_btn('s')
 ```
 
 ### 5. Widgets Page
@@ -378,114 +381,112 @@ This test suite covers automation of tests related to the "Widgets" section of t
 Elements on this page:
 1. **Accordian**
 ```python
-    def get_accordian(self, index):
-        card_body = None
-        accordian = self.driver.find_element(By.ID, self.accordian_div_id)
-        cards = accordian.find_elements(By.CLASS_NAME, self.accordian_card_class)
-        card = cards[index]
-        card_heading = card.find_element(By.CLASS_NAME, self.accordian_card_heading_class)
-        collapse_class_value = card.find_element(By.CLASS_NAME, 'collapse').get_attribute('class')
-        if collapse_class_value == 'collapse show':
-            card_body = card.find_element(By.CLASS_NAME, self.accordian_card_body_class).text
-        elif collapse_class_value == 'collapse':
-            self.driver.execute_script("arguments[0].click()", card_heading)
-            card_body = card.find_element(By.CLASS_NAME, self.accordian_card_body_class).text
-        return card_heading.text, card_body
+def get_accordian(self, index):
+    card_body = None
+    accordian = self.driver.find_element(By.ID, self.accordian_div_id)
+    cards = accordian.find_elements(By.CLASS_NAME, self.accordian_card_class)
+    card = cards[index]
+    card_heading = card.find_element(By.CLASS_NAME, self.accordian_card_heading_class)
+    collapse_class_value = card.find_element(By.CLASS_NAME, 'collapse').get_attribute('class')
+    if collapse_class_value == 'collapse show':
+        card_body = card.find_element(By.CLASS_NAME, self.accordian_card_body_class).text
+    elif collapse_class_value == 'collapse':
+        self.driver.execute_script("arguments[0].click()", card_heading)
+        card_body = card.find_element(By.CLASS_NAME, self.accordian_card_body_class).text
+    return card_heading.text, card_body
 ```
 1. **Auto Complete**
 1. **Date Picker**
 ```python
-    def set_date(self, date):
-        date_element = self.driver.find_element(By.ID, self.date_picker_id)
-        date_element.clear()
-        self.driver.execute_script("arguments[0].value = arguments[1];", date_element, date)
+def set_date(self, date):
+    date_element = self.driver.find_element(By.ID, self.date_picker_id)
+    date_element.clear()
+    self.driver.execute_script("arguments[0].value = arguments[1];", date_element, date)
 
-    def set_datetime(self, datetime):
-        date_element = self.driver.find_element(By.ID, self.date_n_time_picker_id)
-        date_element.clear()
-        self.driver.execute_script("arguments[0].value = arguments[1];", date_element, datetime)
+def set_datetime(self, datetime):
+    date_element = self.driver.find_element(By.ID, self.date_n_time_picker_id)
+    date_element.clear()
+    self.driver.execute_script("arguments[0].value = arguments[1];", date_element, datetime)
 ```
 1. **Slider**
 ```python
-    def set_range_slider_value(self, desired_value):
-        slider = self.driver.find_element(By.XPATH, self.range_slider_input_xpath)
-        display_value = self.driver.find_element(By.ID, self.range_value_display_id)
-        min_value = 0
-        max_value = 100
+def set_range_slider_value(self, desired_value):
+    slider = self.driver.find_element(By.XPATH, self.range_slider_input_xpath)
+    display_value = self.driver.find_element(By.ID, self.range_value_display_id)
+    min_value = 0
+    max_value = 100
 
-        # Set the desired values using JavaScript
-        self.driver.execute_script("arguments[0].setAttribute('min', arguments[1]);", slider, min_value)
-        self.driver.execute_script("arguments[0].setAttribute('max', arguments[1]);", slider, max_value)
+    # Set the desired values using JavaScript
+    self.driver.execute_script("arguments[0].setAttribute('min', arguments[1]);", slider, min_value)
+    self.driver.execute_script("arguments[0].setAttribute('max', arguments[1]);", slider, max_value)
 
-        # Set the slider to a specific value
-        self.driver.execute_script("arguments[0].value = arguments[1];", slider, desired_value)
-        self.driver.execute_script("arguments[0].value = arguments[1];", display_value, desired_value)
-
+    # Set the slider to a specific value
+    self.driver.execute_script("arguments[0].value = arguments[1];", slider, desired_value)
+    self.driver.execute_script("arguments[0].value = arguments[1];", display_value, desired_value)
 ```
 1. **Progress Bar**
 ```python
-    def set_progress_bar(self, sec):
-        btn = self.driver.find_element(By.ID, self.start_stop_btn_id)
-        btn.click()
-        time.sleep(sec)
-        btn.click()
+def set_progress_bar(self, sec):
+    btn = self.driver.find_element(By.ID, self.start_stop_btn_id)
+    btn.click()
+    time.sleep(sec)
+    btn.click()
 
-    def get_progress_bar_value(self):
-        return self.driver.find_element(By.XPATH, self.progress_bar_div).text
-
+def get_progress_bar_value(self):
+    return self.driver.find_element(By.XPATH, self.progress_bar_div).text
 ```
 1. **Tabs**
 ```python
-    def click_tabs(self, tab_name):
-        if tab_name == 'what':
-            what_tab = self.driver.find_element(By.ID, self.what_tab_id)
-            self.driver.execute_script("arguments[0].click()", what_tab)
-        elif tab_name == 'origin':
-            origin_tab = self.driver.find_element(By.ID, self.origin_tab_id)
-            self.driver.execute_script("arguments[0].click()", origin_tab)
-        elif tab_name == 'use':
-            use_tab = self.driver.find_element(By.ID, self.use_tab_id)
-            self.driver.execute_script("arguments[0].click()", use_tab)
+def click_tabs(self, tab_name):
+    if tab_name == 'what':
+        what_tab = self.driver.find_element(By.ID, self.what_tab_id)
+        self.driver.execute_script("arguments[0].click()", what_tab)
+    elif tab_name == 'origin':
+        origin_tab = self.driver.find_element(By.ID, self.origin_tab_id)
+        self.driver.execute_script("arguments[0].click()", origin_tab)
+    elif tab_name == 'use':
+        use_tab = self.driver.find_element(By.ID, self.use_tab_id)
+        self.driver.execute_script("arguments[0].click()", use_tab)
 ```
 1. **Tool Tips**
 ```python
-    def get_tool_tip_on_btn_msg(self):
-        self.driver.find_element(By.ID, self.tool_tip_btn_id).click()
-        tool_tip = self.driver.find_element(By.CLASS_NAME, self.btn_tool_tip_msg_div_class)
-        return tool_tip.text
+def get_tool_tip_on_btn_msg(self):
+    self.driver.find_element(By.ID, self.tool_tip_btn_id).click()
+    tool_tip = self.driver.find_element(By.CLASS_NAME, self.btn_tool_tip_msg_div_class)
+    return tool_tip.text
 
-    def get_tool_tip_on_input_field_msg(self):
-        self.driver.find_element(By.ID, self.text_field_id).click()
-        tool_tip = self.driver.find_element(By.CLASS_NAME, self.btn_tool_tip_msg_div_class)
-        return tool_tip.text
+def get_tool_tip_on_input_field_msg(self):
+    self.driver.find_element(By.ID, self.text_field_id).click()
+    tool_tip = self.driver.find_element(By.CLASS_NAME, self.btn_tool_tip_msg_div_class)
+    return tool_tip.text
 ```
 1. **Menu**
 ```python
-    def click_menu_item1(self):
-        menu1 = self.driver.find_element(By.LINK_TEXT, self.menu_item1_link_text)
-        href_text = menu1.get_attribute("href")
-        menu1.click()
-        return href_text
+def click_menu_item1(self):
+    menu1 = self.driver.find_element(By.LINK_TEXT, self.menu_item1_link_text)
+    href_text = menu1.get_attribute("href")
+    menu1.click()
+    return href_text
 ```
 1. **Select Menu**
 ```python
-    def multiselect_dropdown(self):
-        multiselect = self.driver.find_elements(By.XPATH, "//*[@class=' css-tlfecz-indicatorContainer']")
-        self.driver.execute_script("arguments[0].scrollIntoView();", multiselect[-1])
-        multiselect[-1].click()
-        self.driver.find_element(By.ID, self.red_color_multi_select_id).click()
-        self.driver.find_element(By.ID, self.black_color_multi_select_id).click()
-        self.driver.find_element(By.ID, self.blue_color_multi_select_id).click()
-        self.driver.find_element(By.ID, self.green_color_multi_select_id).click()
-        
-  def standard_multiselect(self):
-        std_multi = self.driver.find_element(By.ID, "cars")
-        select = Select(std_multi)
-        select.select_by_visible_text("Volvo")
-        select.select_by_value("saab")
-        select.select_by_index(2)
-        selected_list = select.all_selected_options
-        return [x.text for x in selected_list]
+def multiselect_dropdown(self):
+    multiselect = self.driver.find_elements(By.XPATH, "//*[@class=' css-tlfecz-indicatorContainer']")
+    self.driver.execute_script("arguments[0].scrollIntoView();", multiselect[-1])
+    multiselect[-1].click()
+    self.driver.find_element(By.ID, self.red_color_multi_select_id).click()
+    self.driver.find_element(By.ID, self.black_color_multi_select_id).click()
+    self.driver.find_element(By.ID, self.blue_color_multi_select_id).click()
+    self.driver.find_element(By.ID, self.green_color_multi_select_id).click()
+    
+def standard_multiselect(self):
+    std_multi = self.driver.find_element(By.ID, "cars")
+    select = Select(std_multi)
+    select.select_by_visible_text("Volvo")
+    select.select_by_value("saab")
+    select.select_by_index(2)
+    selected_list = select.all_selected_options
+    return [x.text for x in selected_list]
 ```
 
 
@@ -525,19 +526,19 @@ for i in range(0, 9, 2):
 ```
 3. **Resizable**
 ```python
-    def resize_small_div(self, width, height):
-        small_div_element = self.driver.find_element(By.ID, self.small_div_inside_large_div_id)
-        self.driver.execute_script("arguments[0].scrollIntoView();", small_div_element)
-        self.driver.execute_script(f"arguments[0].style.width = '{width}px';", small_div_element)
-        self.driver.execute_script(f"arguments[0].style.height = '{height}px';", small_div_element)
-        return small_div_element.size['width'], small_div_element.size['height']
+def resize_small_div(self, width, height):
+    small_div_element = self.driver.find_element(By.ID, self.small_div_inside_large_div_id)
+    self.driver.execute_script("arguments[0].scrollIntoView();", small_div_element)
+    self.driver.execute_script(f"arguments[0].style.width = '{width}px';", small_div_element)
+    self.driver.execute_script(f"arguments[0].style.height = '{height}px';", small_div_element)
+    return small_div_element.size['width'], small_div_element.size['height']
 
-    def resizable_div(self, width, height):
-        resizeable_div_element = self.driver.find_element(By.ID, self.resizable_large_div_id)
-        self.driver.execute_script("arguments[0].scrollIntoView();", resizeable_div_element)
-        self.driver.execute_script(f"arguments[0].style.width = '{width}px';", resizeable_div_element)
-        self.driver.execute_script(f"arguments[0].style.height = '{height}px';", resizeable_div_element)
-        return resizeable_div_element.size['width'], resizeable_div_element.size['height']
+def resizable_div(self, width, height):
+    resizeable_div_element = self.driver.find_element(By.ID, self.resizable_large_div_id)
+    self.driver.execute_script("arguments[0].scrollIntoView();", resizeable_div_element)
+    self.driver.execute_script(f"arguments[0].style.width = '{width}px';", resizeable_div_element)
+    self.driver.execute_script(f"arguments[0].style.height = '{height}px';", resizeable_div_element)
+    return resizeable_div_element.size['width'], resizeable_div_element.size['height']
 ```
 4. **Droppable**
 ```python
@@ -554,13 +555,13 @@ self.act.drag_and_drop_by_offset(child, 20, 20)
 ### 1. **HTML Report**
 - `pip install pytest-html`
 - Command to generate html report
-    ```python
-    # report will generate in Reports directory with report.html name
-    pytest --html=Reports/report.html
-   
-    # report will generate on root directory with filename report.html
-    pytest --html=report.html 
-   ```
+```python
+# report will generate in Reports directory with report.html name
+pytest --html=Reports/report.html
+
+# report will generate on root directory with filename report.html
+pytest --html=report.html 
+```
 ### 2. Allure Report
 - `pip install allure-pytest`
 - **Commands to generate allure report**
@@ -577,7 +578,7 @@ pytest -n=5 --alluredir=Reports\Allure_Reports .\testCases\test_elements_page.py
 allure serve dir_name
 allure serve .\Reports\Allure_Reports\
 ```
-    
+
 ## Cross-Browser Test Setup
 To achieve this, will create hooks to give desired browser name
 ```python
@@ -612,7 +613,7 @@ def setup(browser):
     driver.quit()
 ```
 Command to run test with different browsers:
-```commandline
+```python
 # this will open in chrome
 pytest -n=5 --html=Reports/report.html --browser chrome
 
@@ -628,54 +629,138 @@ pytest -n=5 --html=Reports/report.html --browser safari
 # this is default, will open in chrome
 pytest -n=5 --html=Reports/report.html
 ```
+## Run tests in Headless mode
+- Only Chrome, Firefox and Edge integrated for headless
+- Code of execution:
+```python
+# conftest.py
+
+# This will get the value from the CLI/Hooks
+def pytest_addoption(parser):
+    parser.addoption("--browser")
+    parser.addoption("--headless")
+
+
+# This will return the browser value and headless mode to the setup method
+@pytest.fixture()
+def browser_setup(request):
+    browser_value = request.config.getoption("--browser")
+    headless_value = request.config.getoption("--headless")
+    return browser_value, headless_value
+
+
+# Driver initialization
+@pytest.fixture()
+def setup(browser_setup):
+    global driver  # this for taking screenshot
+    browser, headless = browser_setup
+    print(f"Headless: {headless}, Browser: {browser}")
+    if headless == 'y':
+        if browser == 'chrome':
+            chrome_options = ChromeOptions()
+            chrome_options.add_argument('--headless')
+            driver = webdriver.Chrome(options=chrome_options)
+        elif browser == 'firefox':
+            firefox_options = FirefoxOptions()
+            firefox_options.add_argument('--headless')
+            driver = webdriver.Firefox(options=firefox_options)
+        elif browser == 'edge':
+            edge_options = EdgeOptions()
+            edge_options.add_argument('--headless')
+            driver = webdriver.Edge(options=edge_options)
+        else:
+            chrome_options = ChromeOptions()
+            chrome_options.add_argument('--headless')
+            driver = webdriver.Chrome(options=chrome_options)  # Default to Chrome if no specific browser is provided
+    else:
+        if browser == 'chrome':
+            driver = webdriver.Chrome()
+        elif browser == 'firefox':
+            driver = webdriver.Firefox()
+        elif browser == 'edge':
+            driver = webdriver.Edge()
+        elif browser == 'safari':
+            driver = webdriver.Safari()
+        else:
+            driver = webdriver.Chrome()  # Default to Chrome if no specific browser is provided
+
+    driver.implicitly_wait(10)
+    driver.maximize_window()
+    driver.get(base_url)
+    yield driver
+    driver.quit()
+```
+- **Commands to run in headless mode**
+```commandline
+pytest --headless y
+```
+or run specific browser in headless
+```commandline
+pytest --browser chrome --headless y
+pytest --browser firefox --headless y
+pytest --browser edge --headless y
+```
+- **Not run as headless**: don't specify `--headless`
+ ```commandline
+pytest 
+pytest --browser edge
+pytest --browser chrome
+```
+
+
 ## Attach Screenshot to Report
 ### 1. Attach Screenshot to Pytest-HTML Report
 If test case got failed then take screenshot and attach to html report only if report generate.
 - Code to take screenshot and attach to report, below code added to `conftest.py`
-    ```python
-    import pytest_html
-    from datetime import datetime
+```python
+import pytest_html
+from datetime import datetime
+
+# Define a pytest hook to handle test report creation
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    # Get the outcome of the test
+    outcome = yield
+
+    # Extract the report from the outcome
+    report = outcome.get_result()
+
+    # Get any existing extras attached to the report, or create an empty list
+    extras = getattr(report, "extra", [])
+
+    # Check if the report is from a test execution or test setup phase
+    if report.when == "call" or report.when == "setup":
+
+        # Check if the test was expected to fail
+        xfail = hasattr(report, "wasxfail")
+
+        # Check if the test was skipped and marked as an expected failure (xfail),
+        # or if the test failed and was not marked as expected to fail
+        if (report.skipped and xfail) or (report.failed and not xfail):
+            # Get the current time and date for timestamping the screenshot
+            current_time = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+            current_date = datetime.now().strftime("%Y-%m-%d")
+
+            # Define the file path where the screenshot will be saved
+            file_path = f"C:\\Automation\\Python\\DemoQA-Automation\\Screenshots\\Failed_Screenshot_{current_time}.png"
+
+            # Take a screenshot using the 'driver' object, assuming it's available in the scope
+            driver.get_screenshot_as_file(file_path)
+
+            # Define HTML code for displaying the screenshot in the HTML report
+            extra_html = f'<div><img src="{file_path}" style="width:250px;height:180px;" onclick="window.open(this.src)" align="right"/></div>'
+
+            # Append the HTML code to the extras list
+            extras.append(pytest_html.extras.html(extra_html))
+
+    # Assign the updated extras list back to the report
+    report.extra = extras
+```
+- Command to generate report
+```commandline
+pytest --html=Reports.html
+```
     
-    # Define a pytest hook to handle test report creation
-    @pytest.hookimpl(hookwrapper=True)
-    def pytest_runtest_makereport(item, call):
-        # Get the outcome of the test
-        outcome = yield
-    
-        # Extract the report from the outcome
-        report = outcome.get_result()
-    
-        # Get any existing extras attached to the report, or create an empty list
-        extras = getattr(report, "extra", [])
-    
-        # Check if the report is from a test execution or test setup phase
-        if report.when == "call" or report.when == "setup":
-    
-            # Check if the test was expected to fail
-            xfail = hasattr(report, "wasxfail")
-    
-            # Check if the test was skipped and marked as an expected failure (xfail),
-            # or if the test failed and was not marked as expected to fail
-            if (report.skipped and xfail) or (report.failed and not xfail):
-                # Get the current time and date for timestamping the screenshot
-                current_time = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-                current_date = datetime.now().strftime("%Y-%m-%d")
-    
-                # Define the file path where the screenshot will be saved
-                file_path = f"C:\\Automation\\Python\\DemoQA-Automation\\Screenshots\\Failed_Screenshot_{current_time}.png"
-    
-                # Take a screenshot using the 'driver' object, assuming it's available in the scope
-                driver.get_screenshot_as_file(file_path)
-    
-                # Define HTML code for displaying the screenshot in the HTML report
-                extra_html = f'<div><img src="{file_path}" style="width:250px;height:180px;" onclick="window.open(this.src)" align="right"/></div>'
-    
-                # Append the HTML code to the extras list
-                extras.append(pytest_html.extras.html(extra_html))
-    
-        # Assign the updated extras list back to the report
-        report.extra = extras
-    ```
 
 ## Contributing
 
